@@ -40,10 +40,17 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& echo "daemon off;" >> /etc/nginx/nginx.conf
 
-RUN apt-get update \
-	&& apt-get install -y mariadb-server 
+COPY ./mariaDB.sh .
+COPY ./start.sh .
+
+RUN apt-get update && apt-get install -y gnupg2
+
+RUN chmod 777 ./start.sh
+RUN chmod 777 ./mariaDB.sh
+RUN ./mariaDB.sh
+
 
 #ADD default /etc/nginx/sites-available/default
 
 EXPOSE 80
-CMD ["nginx"]
+CMD ["./start.sh"]
