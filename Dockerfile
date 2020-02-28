@@ -40,8 +40,19 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& echo "daemon off;" >> /etc/nginx/nginx.conf
 
+RUN apt-get update \
+	&& apt-get install systemd -y \
+	&& apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+	
+RUN apt-get update \
+	&& apt-get install wget -y\
+	&& apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
 COPY ./mariaDB.sh .
 COPY ./start.sh .
+COPY ./wordpress.conf /etc/nginx/sites-available/
 
 RUN apt-get update && apt-get install -y gnupg2
 
@@ -53,4 +64,4 @@ RUN ./mariaDB.sh
 #ADD default /etc/nginx/sites-available/default
 
 EXPOSE 80
-CMD ["./start.sh"]
+CMD bash start.sh && tail -f /dev/null
