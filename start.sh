@@ -11,18 +11,18 @@ mysql -e "FLUSH PRIVILEGES";
 
 echo "done"
 
-echo "starting nginx"
+
 
 mkdir -p /var/www/html/wordpress/public_html
 
-service nginx start
+
 
 nginx -t
 
 cd /etc/nginx/sites-enabled
+rm default
 ln -s ../sites-available/wordpress.conf .
 
-systemctl reload nginx
 
 
 cd /var/www/html/wordpress/public_html
@@ -31,9 +31,23 @@ tar -zxvf latest.tar.gz
 mv wordpress/* .
 rm -rf wordpress
 
+echo "copying wp-config.php"
+cp /wp-config.php /var/www/html/wordpress/public_html/
 
 
 cd /var/www/html/wordpress/public_html
 chown -R www-data:www-data *
 chmod -R 755 *
+
+
+echo "starting php7.3-fpm services"
+service php7.3-fpm start 
+
+echo "infinte loop"
+
+while :
+do
+	echo "Press [CTRL+C] to stop.."
+	sleep 10
+done
 

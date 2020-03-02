@@ -3,7 +3,6 @@
 echo ">>> Installing MariaDB"
 
 
-docker # default version
 MARIADB_VERSION='10.1'
 
 # Import repo key
