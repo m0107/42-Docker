@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+sh generate_certificates.sh
+
+
 service mysql start
 
 echo "creating database for wordpress"
@@ -13,8 +17,7 @@ echo "done"
 
 
 
-mkdir -p /var/www/html/wordpress/public_html
-
+mkdir /var/www/wordpress /var/www/phpmyadmin
 
 
 nginx -t
@@ -24,18 +27,29 @@ rm default
 ln -s ../sites-available/wordpress.conf .
 
 
+echo "Installing phpmyadmin"
+cd /var/www/phpmyadmin/
+wget https://files.phpmyadmin.net/phpMyAdmin/4.9.0.1/phpMyAdmin-4.9.0.1-all-languages.tar.gz
+tar -zxvf phpMyAdmin-4.9.0.1-all-languages.tar.gz
+mv phpMyAdmin-4.9.0.1-all-languages/* .
+rm -rf phpMyAdmin-4.9.0.1-all-languages
 
-cd /var/www/html/wordpress/public_html
+
+echo "copying phpmyadmin config"
+cp /config.inc.php /var/www/phpmyadmin
+
+echo "Installing wordpress"
+cd /var/www/wordpress/
 wget https://wordpress.org/latest.tar.gz
 tar -zxvf latest.tar.gz
 mv wordpress/* .
 rm -rf wordpress
 
 echo "copying wp-config.php"
-cp /wp-config.php /var/www/html/wordpress/public_html/
+cp /wp-config.php /var/www/wordpress
 
 
-cd /var/www/html/wordpress/public_html
+cd /var/www/wordpress
 chown -R www-data:www-data *
 chmod -R 755 *
 

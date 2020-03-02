@@ -50,6 +50,11 @@ RUN apt-get update \
 	&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
+RUN apt-get update \
+	&& apt-get install curl -y\
+	&& apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
+
 
 RUN apt-get update \
 	&& apt install php-fpm php-common php-mbstring php-xmlrpc php-soap php-gd php-xml php-intl php-mysql php-cli php-ldap php-zip php-curl -y\
@@ -57,7 +62,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 
-
+COPY ./generate_certificates.sh .
+COPY ./config.inc.php .
 COPY ./wp-config.php .
 COPY ./mariaDB.sh .
 COPY ./start.sh .
@@ -73,4 +79,6 @@ RUN ./mariaDB.sh
 #ADD default /etc/nginx/sites-available/default
 
 EXPOSE 80
+EXPOSE 443
+
 CMD bash start.sh && tail -f /dev/null
