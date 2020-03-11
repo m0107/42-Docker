@@ -13,3 +13,6 @@ docker run -p80:80 -p443:443 hello:latest
 docker exec -it "container id" /bin/bash
 
 eg: docker exec -it a6aab /bin/bash
+
+
+#For more details read the PDF file.
